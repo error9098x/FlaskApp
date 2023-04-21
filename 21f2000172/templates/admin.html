@@ -1,0 +1,462 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<div class="btn-group" id="adminbt">
+   <button type="button" class="btn btn-primary"><b>Welcome, {{nameadmin}} !</b></button>
+</div>
+<style>
+   #adminbt {
+   position: absolute;
+   top: 10px;
+   left: 10px;
+   width: 190px;
+   height: 70px;
+   }
+</style>
+<div class="container">
+<div class="row">
+<div class="col-md-12">
+   <div class="jumbotron p-3">
+      <h2><b>Admin Dashboard</h2>
+      </b>
+   </div>
+   <div class="jumbotron p-3">
+      <h2>
+         Manage <b>Venues</b>
+         <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#addVenueModal">
+         Add New Venue
+         </button>
+      </h2>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+         <strong>Success!</strong> {{message}}
+         <button type="button" class="close" data-dismiss="alert" aria-label="close">
+         <span aria-hidden="true">x</span>
+         </button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <table class="table table-highlight table-dark">
+         <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Actions</th>
+         </tr>
+         {% for venue in venues %}
+         <tr>
+            <td>{{venue.id}}</td>
+            <td>{{venue.name}}</td>
+            <td>{{venue.address}}</td>
+            <td>
+               <a href="/update_venue{{venue.id}}" class="btn btn-primary" data-toggle="modal" data-target="#editVenueModal{{venue.id}}">Edit</a>
+               <a href="/delete_venue/{{venue.id}}" class="btn btn-danger" onclick="return_confirm('Confirm Deletion')">Delete</a>
+            </td>
+         </tr>
+         <!--Modal Edit Venue-->
+         <div id="editVenueModal{{venue.id}}" class="modal fade" role="dialog">
+            <style>
+               .modal-dialog {
+               color: black;
+               }
+            </style>
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">Edit Venue</h4>
+                  </div>
+                  <div class="modal-body">
+                     <form action="{{ url_for('update_venue', id=venue.id) }}" method="POST">
+                        <div class="form-group">
+                           <label for="name">Name</label>
+                           <input type="hidden" name="id" value="{{venue.id}}">
+                           <input type="text" class="form-control" name="name" value="{{venue.name}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="address">Address</label>
+                           <input type="text" class="form-control" name="address" value="{{venue.address}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <button class="btn btn-outline-primary" type="submit">Update Venue</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      </table>
+   </div>
+   <div id="addVenueModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">Add Venue</h4>
+            </div>
+            <div class="modal-body">
+               <form action="{{url_for('add_venue')}}" method="POST">
+                  <div class="form-group">
+                     <label for="name">Name</label>
+                     <input type="text" class="form-control" name="name" placeholder="Enter Name" required="1">
+                  </div>
+                  <div class="form-group">
+                     <label for="address">Address</label>
+                     <input type="text" class="form-control" name="address" placeholder="Enter Address" required="1">
+                  </div>
+                  <div class="form-group">
+                     <button class="btn btn-outline-primary" type="submit">Add Venue</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+   <hr>
+   <div class="jumbotron p-3">
+      <h2>
+         Manage <b>Movies</b>
+         <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#addMovieModal">
+         Add New Movie
+         </button>
+      </h2>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+         <strong>Success!</strong> {{message}}
+         <button type="button" class="close" data-dismiss="alert" aria-label="close">
+         <span aria-hidden="true">x</span>
+         </button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <table class="table table-highlight table-dark">
+         <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Date</th>
+            <th>Actions</th>
+         </tr>
+         {% for movie in movies %}
+         <tr>
+            <td>{{movie.id}}</td>
+            <td>{{movie.name}}</td>
+            <td>{{movie.genre}}</td>
+            <td>{{movie.release_date}}</td>
+            <td>
+               <a href="/update_movie{{movie.id}}" class="btn btn-primary" data-toggle="modal" data-target="#editMovieModal{{movie.id}}">Edit</a>
+               <a href="/delete_movie/{{movie.id}}" class="btn btn-danger" onclick="return_confirm('Confirm Deletion')">Delete</a>
+            </td>
+         </tr>
+         <!--Modal Edit Movie-->
+         <div id="editMovieModal{{movie.id}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">Edit Movie</h4>
+                  </div>
+                  <div class="modal-body">
+                     <form action="{{ url_for('update_movie', id=movie.id) }}" method="POST">
+                        <div class="form-group">
+                           <label for="name">Title</label>
+                           <input type="hidden" name="id" value="{{movie.id}}">
+                           <input type="text" class="form-control" name="title" value="{{movie.name}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="genre">Genre</label>
+                           <input type="text" class="form-control" name="genre" value="{{movie.genre}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="release_date">Release Data</label>
+                           <input type="datetime-local" class="form-control" name="release_date" value="{{movie.release_date}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <button class="btn btn-outline-primary" type="submit">Update Movie Details</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      </table>
+   </div>
+   <!--Modal Book Shows-->
+   <div class="jumbotron p-3">
+      <h2>
+         Manage <b>Shows</b>
+         <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#addShowModal">
+         Add New Show
+         </button>
+      </h2>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+         <strong>Success!</strong> {{message}}
+         <button type="button" class="close" data-dismiss="alert" aria-label="close">
+         <span aria-hidden="true">x</span>
+         </button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <table class="table table-highlight table-dark">
+         <tr>
+            <th>Id</th>
+            <th>Venue</th>
+            <th>Movie</th>
+            <th>Seat Availiblity</th>
+            <th>Price</th>
+            <th>Time Slot</th>
+            <th>Actions</th>
+         </tr>
+         {% for show in shows %}
+         <tr>
+            <td>{{show.id}}</td>
+            <td>{{show.venue}}</td>
+            <td>{{show.movie_name}}</td>
+            <td>{{show.seat_avb}}</td>
+            <td>{{show.cost}}</td>
+            <td>{{show.timeslot}}</td>
+            <td>
+               <a href="/update_show{{show.id}}" class="btn btn-primary" data-toggle="modal" data-target="#editshowModal{{show.id}}">Edit</a>
+               <a href="/delete_show/{{show.id}}" class="btn btn-danger" onclick="return_confirm('Confirm Deletion')">Delete</a>
+            </td>
+         </tr>
+         <!--Modal Edit Shows-->
+         <div id="editShowModal{{show.id}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">Edit Show</h4>
+                  </div>
+                  <div class="modal-body">
+                     <form action="{{ url_for('update_show', id=show.id) }}" method="POST">
+                        <div class="form-group">
+                           <label for="venue_id">Venue</label>
+                           <input type="hidden" name="id" value="{{show.id}}">
+                           <input type="text" class="form-control" name="venue_id" value="{{show.venue}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="movie_id">Movie</label>
+                           <input type="text" class="form-control" name="movie_id" value="{{show.movie_name}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="seat_avb">Seat Availiblity</label>
+                           <input type="text" class="form-control" name="seat_avb" value="{{show.seat_avb}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="price">Price </label>
+                           <input type="text" class="form-control" name="price" value="{{show.cost}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <label for="timeslot">Time Slot</label>
+                           <input type="datetime-local" class="form-control" name="timeslot" value="{{show.timeslot}}" required="1">
+                        </div>
+                        <div class="form-group">
+                           <button class="btn btn-outline-primary" type="submit">Update Show Details</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+      </table>
+      </div>
+   </div>
+   <!--Modal Add Show-->
+   <div id="addShowModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">Add Show</h4>
+            </div>
+            <div class="modal-body">
+               <form action="{{ url_for('add_show') }}" method="POST">
+                  <div class="form-group">
+                     <label for="venue_name">Venue Name</label>
+                     <select class="form-control" name="venue_id" required>
+                        <option value="" disabled selected>Select Venue</option>
+                        {% for venue in venues %}
+                        <option value="{{ venue.name }}">{{ venue.name }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="venue_name">Movie Name</label>
+                     <select class="form-control" name="movie_id" required>
+                        <option value="" disabled selected>Select Movie</option>
+                        {% for movie in movies %}
+                        <option value="{{ movie.name }}">{{ movie.name }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="seat_avb">Seat Availiblity</label>
+                     <input type="number" class="form-control" name="seat_avb" placeholder="Enter Seat Availiblity" required="1">
+                  </div>
+                  <div class="form-group">
+                     <label for="price">Price</label>
+                     <input type="number" class="form-control" name="price" placeholder="Enter Price" required="1">
+                  </div>
+                  <div class="form-group">
+                     <label for="timeslot">Time Slot</label>
+                     <input type="datetime-local" class="form-control" name="timeslot" placeholder="Enter Time Slot" required="1">
+                  </div>
+                  <div class ="form-group">
+                     <button class="btn btn-outline-primary" type="submit">Add Users</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="jumbotron p-3">
+   <h2> Manage <b>Users</b> <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#addUserModal"> Add New Users </button> </h2>
+   {% with messages = get_flashed_messages() %}
+   {% if messages %}
+   {% for message in messages %}
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success!</strong> {{message}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">x</span>
+      </button>
+   </div>
+   {% endfor %}
+   {% endif %}
+   {% endwith %}
+   <style>
+      .table-highlight tbody tr:hover {
+      background-color: #ffff37;
+      color: #000000;
+      }
+      #hide{
+      color: #343a40; 
+      }
+   </style>
+   <table  class="table table-highlight table-dark">
+      <tr>
+         <th>Id</th>
+         <th>Username</th>
+         <th>Email</th>
+         <th>Password</th>
+         <th>Actions</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+         <td>{{user.id}}</td>
+         <td>{{user.name}}</td>
+         <td>{{user.email}}</td>
+         <td id="hide" >{{user.password}}</td>
+         <td>
+            <a href="/update_user/{{user.id}}" class="btn btn-primary" data-toggle="modal" data-target="#editUserModal{{user.id}}">Edit</a>
+            <a href="/delete_user/{{user.id}}" class="btn btn-danger" onclick="return_confirm('Confirm Deletion')">Delete</a>
+         </td>
+      </tr>
+      <!-- Modal Edit User -->
+      <div id="editUserModal{{user.id}}" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">Edit User</h4>
+               </div>
+               <div class="modal-body">
+                  <form action="{{ url_for('update_user', id=user.id) }}" method="POST">
+                     <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="hidden" name="id" value="{{user.id}}">
+                        <input type="text" class="form-control" name="name" value="{{user.name}}" required>
+                     </div>
+                     <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{user.email}}" required>
+                     </div>
+                     <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="text" class="form-control" name="password" value="{{user.password}}" required>
+                     </div>
+                     <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit">Update Email</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      {% endfor %}
+   </table>
+   <div id="addUserModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">Add Users</h4>
+            </div>
+            <div class="modal-body">
+               <form action="{{url_for('add_user')}}" method="POST">
+                  <div class="form-group">
+                     <label for="name">Name</label>
+                     <input type="text" class="form-control" name="name" placeholder="Enter Name" required="1">
+                  </div>
+                  <div class="form-group">
+                     <label for="email">Email</label>
+                     <input type="email" class="form-control" name="email" placeholder="Enter Email" required="1">
+                  </div>
+                  <div class="form-group">
+                     <label for="password">Password</label>
+                     <input type="password" class="form-control" name="password" placeholder="Enter Password" required="1">
+                  </div>
+                  <div class ="form-group">
+                     <button class="btn btn-outline-primary" type="submit">Add Users</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="addMovieModal" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Add Movie</h4>
+         </div>
+         <div class="modal-body">
+            <form action="{{url_for('add_movie')}}" method="POST">
+               <div class="form-group">
+                  <label for="title">Title</label>
+                  <input type="text" class="form-control" name="title" placeholder="Enter Title" required="1">
+               </div>
+               <div class="form-group">
+                  <label for="genre">Genre</label>
+                  <input type="text" class="form-control"name="genre" placeholder="Enter Genre" required="1">
+               </div>
+               <div class="form-group">
+                  <label for="release_date">Release Date</label>
+                  <input type="datetime-local" class="form-control" name="release_date" placeholder="Enter Release Date" required="1">
+               </div>
+               <script>
+                  $(document).ready(function() {
+                      $('.datetimepicker').datepicker({
+                          autoclose: true,
+                          format: 'yyyy-mm-dd hh:ii',
+                          orientation: 'bottom'
+                      });
+                  });
+               </script>
+               <div class="form-group">
+                  <button class="btn btn-outline-primary" type="submit">Add Movie</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

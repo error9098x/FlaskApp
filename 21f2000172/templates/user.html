@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %}{{ user.name }}{% endblock %}
+{% block body %}
+<div class="btn-group" id="userbt">
+   <button type="button" class="btn btn-primary"><b>Welcome, {{user.name}} !</b></button>
+</div>
+<style>
+   #userbt {
+   position: absolute;
+   top: 10px;
+   left: 10px;
+   width: 190px;
+   height: 70px;
+   }
+</style>
+<div class="container">
+   <div class="row">
+      <div class="col-md-12">
+         <div class="jumbotron p-3">
+            <h2><b>User Dashboard</h2>
+            </b>
+         </div>
+         {% with messages = get_flashed_messages() %}
+         {% if messages %}
+         {% for message in messages %}
+         {% if message == "Ticket Booked Successfully" %}
+         <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">x</span>
+            </button>
+         </div>
+         {% endif %}
+         {% if messages == "Sorry, there are no more seats available for this show." %}
+         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">x</span>
+            </button>
+         </div>
+         {% endif %}
+         {% endfor %}
+         {% endif %}
+         {% endwith %}
+         <div class="jumbotron p-3">
+            <h2>
+               <b>Movies in Theatres</b>
+               <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#buytickets">
+               Buy Tickets
+               </button>
+            </h2>
+            <hr>
+            <table class="table table-highlight table-dark">
+               <tr>
+                  <th>Movie</th>
+                  <th>Genre</th>
+                  <th>Release Date</th>
+               </tr>
+               {% for movie in movies %}
+               <td>{{movie.name}}</td>
+               <td>{{movie.genre}}</td>
+               <td>{{movie.release_date}}</td>
+               <td>{{status}}</td>
+               </tr>
+               {% endfor %}
+            </table>
+         </div>
+         <div class="jumbotron p-3">
+            <h2>
+               <b>My Bookings</b>
+               <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#buytickets">
+               Buy Tickets
+               </button>
+            </h2>
+            <hr>
+            <table class="table table-highlight table-dark">
+               <tr>
+                  <th>Venue</th>
+                  <th>Movie</th>
+                  <th>Price</th>
+                  <th>Time Slot</th>
+               </tr>
+               {% for booking in bookings %}
+               {% if booking.user_id == user.id %}
+               <td>{{booking.venue}}</td>
+               <td>{{booking.movie}}</td>
+               <td>{{booking.cost}}</td>
+               <td>{{booking.timeslot}}</td>
+               {% endif %}
+               </tr>
+               {% endfor %}
+            </table>
+         </div>
+         <div id="buytickets" class="modal fade" role="dialog">
+            <div class="jumbotron p-3">
+               <h2>
+                  <b>Upcoming Movie Shows</b>
+               </h2>
+               <table class="table table-highlight table-dark">
+                  <tr>
+                     <th>Venue</th>
+                     <th>Movie</th>
+                     <th>Seat Avaiblity </th>
+                     <th>Status</th>
+                     <th>TimeSlot</th>
+                     <th>Price</th>
+                  </tr>
+                  {% for show in shows %}
+                  <tr>
+                     <td>{{show.venue}}</td>
+                     <td>{{show.movie_name}}</td>
+                     {% if show.seat_avb == 0 %}
+                     {% set status = "Not Available" %}
+                     {% elif show.seat_avb <= 20 %}
+                     {% set status = "Running Out" %}
+                     {% elif show.seat_avb <= 50 %}
+                     {% set status = "Partially Booked" %}
+                     {% elif show.seat_avb <= 80 %}
+                     {% set status = "Partially Booked" %}
+                     {% elif show.seat_avb > 80 %}
+                     {% set status = "Mostly Empty" %}
+                     {% else %}
+                     {% set status = "Almost Empty" %}
+                     {% endif %}
+                     <td>{{show.seat_avb}}</td>
+                     <td>{{status}}</td>
+                     <td>{{show.timeslot}}</td>
+                     <td>{{show.cost}}</td>
+                     <td>
+                        <form action="{{ url_for('buy_tickets', id=show.id, venue_id=show.venue, movie_name=show.movie_name, cost = show.cost, timeslot = show.timeslot) }}" method="POST">
+                           <input type="hidden" name="user_id" value="{{ user.id }}">
+                           <input type="hidden" name="id" value="{{show.id}}">
+                           <input type="hidden" name="seat_avb" value="{{show.seat_avb}}">
+                           <input type="hidden" name="venue_id" value="{{show.venue_id}}">
+                           <input type="hidden" name="movie_name" value="{{show.movie_name}}">
+                           <input type="hidden" name="timeslot" value="{{show.timeslot}}">
+                           <input type="hidden" name="cost" value="{{show.cost}}">
+                           <button type="submit" class="btn btn-primary">Buy</button>
+                        </form>
+                     </td>
+                     <div class="form-group">
+                     </div>
+                     </td>
+                  </tr>
+                  {% endfor %}
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<hr>
+{% endblock %}
