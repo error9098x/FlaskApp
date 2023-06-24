@@ -8,9 +8,10 @@ This is a Flask web application for booking movie tickets online.
 
 Here are some screenshots of the web application:
 
-- Home Page: ![Home Page](https://files.catbox.moe/59gkd2.png)
-- Movie Selection Page: ![Movie Selection Page](https://example.com/movie_selection.png)
-- Confirmation Page: ![Confirmation Page](https://example.com/confirmation.png)
+- Login Page: ![Home Page](https://files.catbox.moe/59gkd2.png)
+- Admin Page: ![Admin](https://files.catbox.moe/3ft5yd.png)
+- User Page ![User](https://files.catbox.moe/3ft5yd.png)
+- Movie Selection Page: ![Movie Selection Page](https://files.catbox.moe/m08mo1.png)
 
 ## Features
 
