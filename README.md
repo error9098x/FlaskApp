@@ -1,4 +1,3 @@
-Here's an example of a README file for the MovieBookingFlaskApp that includes links to images:
 
 # MovieBookingFlaskApp
 
@@ -26,14 +25,14 @@ Here are some screenshots of the web application:
 - Python 3.x
 - Flask 2.x
 - SQLAlchemy 1.x
-- WTForms 3.x
+- Bootstrap
 
 ## Installation and Setup
 
 1. Clone the repository:
 
 ```
-git clone https://github.com/your-username/MovieBookingFlaskApp.git
+git clone https://github.com/error9098x/MovieBookingFlaskApp.git
 ```
 
 2. Install the dependencies:
