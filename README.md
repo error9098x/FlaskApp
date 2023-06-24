@@ -8,7 +8,7 @@ This is a Flask web application for booking movie tickets online.
 
 Here are some screenshots of the web application:
 
-- Home Page: ![Home Page](https://example.com/home_page.png)
+- Home Page: ![Home Page](https://files.catbox.moe/59gkd2.png)
 - Movie Selection Page: ![Movie Selection Page](https://example.com/movie_selection.png)
 - Confirmation Page: ![Confirmation Page](https://example.com/confirmation.png)
 
